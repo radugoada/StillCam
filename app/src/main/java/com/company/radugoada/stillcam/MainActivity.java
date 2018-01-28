@@ -10,6 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
     Camera camera;
     FrameLayout frameLayout;
+    ShowCamera showCamera;
 
     //@SuppressLint("WrongViewCast")
     @Override
@@ -20,8 +21,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Open the Rear Camera
 
-        camera = Camera.open();
 
+        camera = Camera.open(); //camera object
+        showCamera = new ShowCamera(this, camera); //now the class from ShowCamera will be initiated
 
     }
 }
