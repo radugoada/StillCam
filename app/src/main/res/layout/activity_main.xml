@@ -11,27 +11,49 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="36dp">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
     </FrameLayout>
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Snap" />
+        android:background="@android:drawable/ic_menu_camera"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/button2"
+        android:layout_width="60dp"
+        android:layout_height="55dp"
+        android:layout_alignBaseline="@+id/button"
+        android:layout_alignBottom="@+id/button"
+        android:layout_marginStart="35dp"
+        android:layout_toEndOf="@+id/textView"
+        android:background="@android:drawable/ic_menu_gallery"
+        android:backgroundTint="@android:color/holo_green_dark" />
+
+    <Switch
+        android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="24dp"
-        android:layout_toEndOf="@+id/button"
-        android:background="@android:drawable/ic_menu_gallery" />
+        android:layout_alignBaseline="@+id/button2"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="35dp"
+        android:text="Flash" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="117dp"
+        android:layout_height="31dp"
+
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:text="Y: value" />
 
 </RelativeLayout>
