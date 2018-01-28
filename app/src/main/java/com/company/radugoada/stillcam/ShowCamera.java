@@ -1,9 +1,12 @@
 package com.company.radugoada.stillcam;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.io.IOException;
 
 /**
  * Created by radugoada on 1/28/18.
@@ -18,6 +21,7 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         this.camera = camera;
         holder = getHolder();
+        holder.addCallback(this);
     }
 
 
@@ -31,8 +35,40 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    @Override  //surfaceCreated method will be called in MainActivity -> showCamera()
+    @Override  //surfaceCreated method will be called in ShowCamera()
     public void surfaceCreated(SurfaceHolder holder) {
+        //setting parameters for the Camera itself
+        Camera.Parameters params = camera.getParameters();
+
+        //change orientation of the device camera
+        if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+
+            params.set("orientation", "portrait");
+            camera.setDisplayOrientation(90);
+            params.setRotation(90);
+
+        }
+
+        else{
+
+            params.set("orientation","landscape");
+            camera.setDisplayOrientation(0);
+            params.setRotation(90);
+
+        }
+
+        camera.setParameters(params);
+        try{
+
+            camera.setPreviewDisplay(holder);
+            camera.startPreview();
+
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+
 
     }
 }

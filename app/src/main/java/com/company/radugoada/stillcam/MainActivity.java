@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         camera = Camera.open(); //camera object
         showCamera = new ShowCamera(this, camera); //now the class from ShowCamera will be initiated
+        frameLayout.addView(showCamera);
 
     }
 }
