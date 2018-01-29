@@ -28,11 +28,11 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="60dp"
-        android:layout_height="55dp"
+        android:layout_width="58dp"
+        android:layout_height="50dp"
         android:layout_alignBaseline="@+id/button"
         android:layout_alignBottom="@+id/button"
-        android:layout_marginStart="35dp"
+        android:layout_marginStart="30dp"
         android:layout_toEndOf="@+id/textView"
         android:background="@android:drawable/ic_menu_gallery"
         android:backgroundTint="@android:color/holo_green_dark" />
@@ -44,16 +44,18 @@
         android:layout_alignBaseline="@+id/button2"
         android:layout_alignBottom="@+id/button2"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="35dp"
-        android:text="Flash" />
+        android:layout_marginStart="30dp"
+        android:fontFamily="monospace"
+        android:text="Flash "
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="117dp"
         android:layout_height="31dp"
-
         android:layout_above="@+id/button"
         android:layout_centerHorizontal="true"
-        android:text="Y: value" />
+        android:text="Y: value ..." />
 
 </RelativeLayout>
