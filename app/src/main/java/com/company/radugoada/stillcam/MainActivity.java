@@ -1,15 +1,13 @@
 package com.company.radugoada.stillcam;
 
-import android.annotation.SuppressLint;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-
+import android.widget.Toast;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -36,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout frameLayout;
     ShowCamera showCamera;
 
+
     //@SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         frameLayout.addView(showCamera);
 
     }
+
 
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     fos.write(data);
                     fos.close();
                     camera.startPreview();
+                    Toast.makeText(MainActivity.this, "Saved to: "+picture_file, Toast.LENGTH_LONG).show(); //Display text where the final image is saved directory path
 
                 }catch (IOException e) //solve the error exception
                 {
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
     //new private method for the output image file
     private File getOuputMediaFile() {
         String state = Environment.getExternalStorageState();
@@ -83,19 +85,19 @@ public class MainActivity extends AppCompatActivity {
         {
             return null;
         }
-        else{
-            //creates new file into directory that we accessed from the device storage
-            File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "GUI");
+        else {
+            //creates new file directory into the device external SD card storage
+            File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "StillCam Images");
 
-            if(!folder_gui.exists())
-            {
+            if (!folder_gui.exists()) {
                 folder_gui.mkdirs();
             }
 
-            File outputFile = new File(folder_gui, "temp.jpg"); //setting name and extension for output image file
+            File outputFile = new File(folder_gui, "stillImage.jpg"); //setting name and extension for output image file
             return outputFile;
         }
     }
+
 
     public void captureImage(View v) //capture image public method
     {

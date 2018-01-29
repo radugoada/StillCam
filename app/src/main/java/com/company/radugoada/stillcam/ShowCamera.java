@@ -3,9 +3,15 @@ package com.company.radugoada.stillcam;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.Camera;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.TotalCaptureResult;
+import android.support.annotation.NonNull;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +33,7 @@ import java.util.List;
 
 public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
 
-    Camera camera;
+    Camera camera;  //initialize Camera hardware
     SurfaceHolder holder;
 
     public ShowCamera(Context context, Camera camera) {
@@ -35,8 +41,8 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
         this.camera = camera;
         holder = getHolder();
         holder.addCallback(this);
-    }
 
+    }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -47,10 +53,11 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) { //added destructor
         camera.stopPreview(); //stops the camera preview
         camera.release();
+
     }
 
     @Override  //surfaceCreated method will be called in ShowCamera()
-    public void surfaceCreated(SurfaceHolder holder) {
+    public void surfaceCreated(SurfaceHolder holder) { //constructor
         //setting parameters for the Camera itself
         Camera.Parameters params = camera.getParameters();
 
@@ -66,18 +73,16 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
         //change orientation of the device camera
         if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
 
-            params.set("orientation", "portrait");
+            params.set("orientation", "portrait"); //setting parameters for device orientation in Portrait
             camera.setDisplayOrientation(90);
             params.setRotation(90);
-
         }
 
         else{
 
-            params.set("orientation","landscape");
+            params.set("orientation","landscape"); //setting parameters for device orientation in Landscape
             camera.setDisplayOrientation(0);
             params.setRotation(90);
-
         }
         params.setPictureSize(mSize.width, mSize.height); //set parameters for resolution image size Width and Height
         camera.setParameters(params);
@@ -86,12 +91,10 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
             camera.setPreviewDisplay(holder);
             camera.startPreview();
 
-        }catch (IOException e)
+        }catch (IOException e) //solving IOException error in Java
         {
             e.printStackTrace();
         }
-
-
 
     }
 }
