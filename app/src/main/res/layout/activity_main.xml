@@ -24,6 +24,7 @@
         android:layout_centerHorizontal="true"
         android:background="@android:drawable/ic_menu_camera"
         android:backgroundTint="@android:color/holo_red_dark"
+        android:onClick="captureImage"
         android:textSize="14sp" />
 
     <Button

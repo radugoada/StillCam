@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.hardware.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /*
@@ -37,11 +38,26 @@ public class MainActivity extends AppCompatActivity {
         frameLayout=(FrameLayout)findViewById(R.id.frameLayout);
 
         //Open the Rear Camera
-
-
         camera = Camera.open(); //camera object
         showCamera = new ShowCamera(this, camera); //now the class from ShowCamera will be initiated
         frameLayout.addView(showCamera);
 
+    }
+
+    Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+
+            //onPictureTaken method will be called and it will get the image from the Device Camera
+        }
+    };
+
+    public void captureImage(View v)
+    {
+
+        if(camera != null)
+        {
+            camera.takePicture(null, null, mPictureCallback); //when ever we click on the Snap button, the takePicture method will be called
+        }
     }
 }
