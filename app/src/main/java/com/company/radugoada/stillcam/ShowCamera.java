@@ -31,8 +31,9 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-
+    public void surfaceDestroyed(SurfaceHolder holder) { //added destructor
+        camera.stopPreview(); //stops the camera preview
+        camera.release();
     }
 
     @Override  //surfaceCreated method will be called in ShowCamera()
