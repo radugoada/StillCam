@@ -36,7 +36,7 @@
         android:layout_marginStart="30dp"
         android:layout_toEndOf="@+id/textView"
         android:background="@android:drawable/ic_menu_gallery"
-        android:backgroundTint="@android:color/holo_green_dark" />
+        android:backgroundTint="@android:color/holo_green_light" />
 
     <TextView
         android:id="@+id/textView"
@@ -47,13 +47,13 @@
         android:text="Y: value ..." />
 
     <ImageButton
-        android:id="@+id/imageButton2"
-        android:background="@null"
+        android:id="@+id/imageButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/button2"
         android:layout_marginEnd="39dp"
         android:layout_toStartOf="@+id/textView"
+        android:background="@null"
         app:srcCompat="@drawable/flashoff" />
 
 </RelativeLayout>

@@ -1,5 +1,8 @@
 package com.company.radugoada.stillcam;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.os.Environment;
@@ -8,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,12 +36,14 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    Camera camera; //initializing Camera Hardware with given variable
-    FrameLayout frameLayout;
-    ShowCamera showCamera;
+    Camera camera; //create Camera Hardware variable with given variable
+    Camera.Parameters parameters;
+    FrameLayout frameLayout; //create variable Layout for camera view
+    ShowCamera showCamera; //calling the Java class with showCamera given input variable
+    ImageButton imageButton; //create flash on/off image button variable
+    boolean isflash = false;
+    boolean ison = false;
 
-
-    //@SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,8 +107,110 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void captureImage(View v) //capture image public method
+/*    public void flashOn()
     {
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isflash)
+                {
+                    if(!ison)
+                    {
+                        imageButton.setImageResource(R.drawable.flashon);
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        camera.setParameters(parameters);
+                        // camera.startPreview();
+                        ison = true;
+                    }
+                    else
+                    {
+                        imageButton.setImageResource(R.drawable.flashoff);
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        camera.setParameters(parameters);
+                        //  camera.stopPreview();
+                        ison = false;
+
+                    }
+
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Error: ");
+                    builder.setMessage("Flashlight is not supported on your device!");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+
+            }
+        });
+
+    }
+    */
+
+
+    public void captureImage(View v) //Capture Image from camera public method
+    {
+        //initialize image button variable for flashlight
+        imageButton = (ImageButton)findViewById(R.id.imageButton);
+        if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
+        {
+            parameters = camera.getParameters();
+            isflash = true;
+        }
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isflash)
+                {
+                    if(!ison)
+                    {
+                        imageButton.setImageResource(R.drawable.flashon);
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        camera.setParameters(parameters);
+                        ison = true;
+                    }
+                    else
+                    {
+                        imageButton.setImageResource(R.drawable.flashoff);
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        camera.setParameters(parameters);
+                        ison = false;
+
+                    }
+
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Error: ");
+                    builder.setMessage("Flashlight is not supported on your device!");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+
+            }
+        });
+
+
         if(camera != null) //we need to set the condition first
         {
             camera.takePicture(null, null, mPictureCallback); //when ever we click on the Snap button, the takePicture method will be called
@@ -114,4 +222,5 @@ public class MainActivity extends AppCompatActivity {
         snapSound.start();
 
     }
+
 }
