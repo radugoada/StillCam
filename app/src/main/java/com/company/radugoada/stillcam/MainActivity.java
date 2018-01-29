@@ -2,10 +2,16 @@ package com.company.radugoada.stillcam;
 
 import android.annotation.SuppressLint;
 import android.hardware.Camera;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /*
  MIT License
@@ -26,7 +32,7 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    Camera camera;
+    Camera camera; //initializing Camera Hardware with given variable
     FrameLayout frameLayout;
     ShowCamera showCamera;
 
@@ -46,16 +52,55 @@ public class MainActivity extends AppCompatActivity {
 
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
+        public void onPictureTaken(byte[] data, Camera camera) { //onPictureTaken method will be called and it will get the image from the Device Camera
 
-            //onPictureTaken method will be called and it will get the image from the Device Camera
+            File picture_file = getOuputMediaFile(); //creating new variable to save the captured image
+
+            if(picture_file == null) // adding statement condition
+            {
+                return;
+            }
+            else {
+
+                try {
+                    FileOutputStream fos = new FileOutputStream(picture_file);
+                    fos.write(data);
+                    fos.close();
+                    camera.startPreview();
+
+                }catch (IOException e) //solve the error exception
+                {
+                    e.printStackTrace();
+                }
+            }
         }
     };
 
-    public void captureImage(View v)
+    //new private method for the output image file
+    private File getOuputMediaFile() {
+        String state = Environment.getExternalStorageState();
+        if(!state.equals(Environment.MEDIA_MOUNTED))
+        {
+            return null;
+        }
+        else{
+            //creates new file into directory that we accessed from the device storage
+            File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "GUI");
+
+            if(!folder_gui.exists())
+            {
+                folder_gui.mkdirs();
+            }
+
+            File outputFile = new File(folder_gui, "temp.jpg"); //setting name and extension for output image file
+            return outputFile;
+        }
+    }
+
+    public void captureImage(View v) //capture image public method
     {
 
-        if(camera != null)
+        if(camera != null) //we need to set the condition first
         {
             camera.takePicture(null, null, mPictureCallback); //when ever we click on the Snap button, the takePicture method will be called
         }
