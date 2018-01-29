@@ -3,15 +3,8 @@ package com.company.radugoada.stillcam;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
-import android.support.annotation.NonNull;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 

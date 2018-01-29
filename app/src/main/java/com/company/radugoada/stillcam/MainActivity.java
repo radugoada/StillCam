@@ -1,10 +1,12 @@
 package com.company.radugoada.stillcam;
 
 import android.hardware.Camera;
+import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import java.io.File;
@@ -49,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) { //onPictureTaken method will be called and it will get the image from the Device Camera
+
 
             File picture_file = getOuputMediaFile(); //creating new variable to save the captured image
 
@@ -101,10 +103,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void captureImage(View v) //capture image public method
     {
-
         if(camera != null) //we need to set the condition first
         {
             camera.takePicture(null, null, mPictureCallback); //when ever we click on the Snap button, the takePicture method will be called
         }
+
+        //play Snap shutter sound
+        final MediaPlayer snapSound = MediaPlayer.create(this, R.raw.camera_shutter);
+        Button button = (Button)this.findViewById(R.id.button);
+        snapSound.start();
+
     }
 }
