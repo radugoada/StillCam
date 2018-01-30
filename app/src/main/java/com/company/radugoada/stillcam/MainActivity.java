@@ -1,6 +1,5 @@
 package com.company.radugoada.stillcam;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.AsyncQueryHandler;
 import android.content.DialogInterface;
@@ -41,6 +40,7 @@ import android.widget.TextView;
  copies or substantial portions of the Software.
  */
 
+/* CAMERA 1 API */
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     FrameLayout frameLayout; //create variable Layout for camera view
     ShowCamera showCamera; //calling the Java class with showCamera given input variable
     ImageButton imageButton; //create flash on/off image button variable
-    boolean isflash = false; //initialize boolean parameters for flashlight state ON/OFF
-    boolean ison = false;
+    boolean isflash = false; //create boolean parameters for flashlight state exists/or doesn't exist
+    boolean ison = false; //create boolean parameters for flashlight state ON/OFF
 
     private TextView yawText; //create objects for calling the sensor
     private Sensor mySensor;
@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         frameLayout=(FrameLayout)findViewById(R.id.frameLayout);
         getSupportActionBar().hide();  //hides the app title bar
 
+        //initialize image button variable for flashlight
+        imageButton = (ImageButton)findViewById(R.id.imageButton);
         //Create our Sensor manager
         SManager =(SensorManager)getSystemService(SENSOR_SERVICE);
         //Accelerometer sensor initialize
@@ -78,13 +80,63 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         showCamera = new ShowCamera(this, camera); //now the class from ShowCamera will be initiated
         frameLayout.addView(showCamera);
 
+
+        if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
+        {
+            parameters = camera.getParameters();
+            isflash = true;
+        }
+
+        imageButton.setOnClickListener(new View.OnClickListener() { //we set the listener to check if we have an existing flash or if the flash is state: ON/OFF
+            @Override
+            public void onClick(View v) {
+
+                if(isflash)
+                {
+                    if(!ison)
+                    {
+                        imageButton.setImageResource(R.drawable.flashon);
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        camera.setParameters(parameters);
+                        ison = true;
+                    }
+                    else
+                    {
+                        imageButton.setImageResource(R.drawable.flashoff);
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        camera.setParameters(parameters);
+                        ison = false;
+
+                    }
+
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this); //condition check if the flashlight is not supported by the mobile device
+                    builder.setTitle("Error: ");
+                    builder.setMessage("Flashlight is not supported on your device!");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+
+            }
+        });
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(SensorEvent event) { //accelerometer method to Show the yaw values
         yawText.setTextColor(Color.rgb(148, 198, 47));
+
         yawText.setText("Rotation: " + event.values[0]);
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -141,109 +193,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-/*    public void flashOn()
+    public void captureImage(View v) //Capture Image from camera Public method
     {
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(isflash)
-                {
-                    if(!ison)
-                    {
-                        imageButton.setImageResource(R.drawable.flashon);
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                        camera.setParameters(parameters);
-                        // camera.startPreview();
-                        ison = true;
-                    }
-                    else
-                    {
-                        imageButton.setImageResource(R.drawable.flashoff);
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                        camera.setParameters(parameters);
-                        //  camera.stopPreview();
-                        ison = false;
-
-                    }
-
-                }
-                else
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Error: ");
-                    builder.setMessage("Flashlight is not supported on your device!");
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-
-            }
-        });
-
-    }
-    */
-
-
-    public void captureImage(View v) //Capture Image from camera public method
-    {
-        //initialize image button variable for flashlight
-        imageButton = (ImageButton)findViewById(R.id.imageButton);
-        if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
-        {
-            parameters = camera.getParameters();
-            isflash = true;
-        }
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(isflash)
-                {
-                    if(!ison)
-                    {
-                        imageButton.setImageResource(R.drawable.flashon);
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                        camera.setParameters(parameters);
-                        ison = true;
-                    }
-                    else
-                    {
-                        imageButton.setImageResource(R.drawable.flashoff);
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                        camera.setParameters(parameters);
-                        ison = false;
-
-                    }
-
-                }
-                else
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Error: ");
-                    builder.setMessage("Flashlight is not supported on your device!");
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-
-            }
-        });
-
 
         if(camera != null) //we need to set the condition first
         {
