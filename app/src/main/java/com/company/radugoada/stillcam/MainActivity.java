@@ -1,8 +1,11 @@
 package com.company.radugoada.stillcam;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.AsyncQueryHandler;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.os.Environment;
@@ -16,6 +19,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.widget.TextView;
 
 /*
  MIT License
@@ -34,27 +42,53 @@ import java.io.IOException;
  */
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     Camera camera; //create Camera Hardware variable with given variable
     Camera.Parameters parameters;
     FrameLayout frameLayout; //create variable Layout for camera view
     ShowCamera showCamera; //calling the Java class with showCamera given input variable
     ImageButton imageButton; //create flash on/off image button variable
-    boolean isflash = false;
+    boolean isflash = false; //initialize boolean parameters for flashlight state ON/OFF
     boolean ison = false;
+
+    private TextView yawText; //create objects for calling the sensor
+    private Sensor mySensor;
+    private SensorManager SManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         frameLayout=(FrameLayout)findViewById(R.id.frameLayout);
+        getSupportActionBar().hide();  //hides the app title bar
+
+        //Create our Sensor manager
+        SManager =(SensorManager)getSystemService(SENSOR_SERVICE);
+        //Accelerometer sensor initialize
+        mySensor = SManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //Register Sensor Listener
+        SManager.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //Assign TextView to get Data from it
+        yawText=(TextView)findViewById(R.id.yawText);
 
         //Open the Rear Camera
         camera = Camera.open(); //camera object
         showCamera = new ShowCamera(this, camera); //now the class from ShowCamera will be initiated
         frameLayout.addView(showCamera);
 
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        yawText.setTextColor(Color.rgb(148, 198, 47));
+        yawText.setText("Rotation: " + event.values + " degrees");
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //Not in use currently
     }
 
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
@@ -86,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    //new private method for the output image file
+    //created private object and method for the output image file
     private File getOuputMediaFile() {
         String state = Environment.getExternalStorageState();
         if(!state.equals(Environment.MEDIA_MOUNTED))
