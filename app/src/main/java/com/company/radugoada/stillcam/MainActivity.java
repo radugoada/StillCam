@@ -3,6 +3,7 @@ package com.company.radugoada.stillcam;
 import android.app.AlertDialog;
 import android.content.AsyncQueryHandler;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Camera;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Formatter;
+
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
@@ -40,7 +43,7 @@ import android.widget.TextView;
  copies or substantial portions of the Software.
  */
 
-/* CAMERA 1 API */
+/* This application uses CAMERA 1 API */
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
@@ -52,10 +55,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     boolean isflash = false; //create boolean parameters for flashlight state exists/or doesn't exist
     boolean ison = false; //create boolean parameters for flashlight state ON/OFF
 
+    private Button buttonGallery;
+
+
     private TextView yawText; //create objects for calling the sensor
     private Sensor mySensor;
     private SensorManager SManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         frameLayout=(FrameLayout)findViewById(R.id.frameLayout);
         getSupportActionBar().hide();  //hides the app title bar
+
+        //initialize button to open second activity (Gallery)
+        buttonGallery = (Button)findViewById(R.id.buttonGallery);
+        buttonGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openActivityGallery();
+            }
+        });
 
         //initialize image button variable for flashlight
         imageButton = (ImageButton)findViewById(R.id.imageButton);
@@ -81,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         frameLayout.addView(showCamera);
 
 
+        //Activate flashlight, set conditions and create a Listener
         if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
         {
             parameters = camera.getParameters();
@@ -106,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                         camera.setParameters(parameters);
                         ison = false;
-
                     }
 
                 }
@@ -125,18 +139,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 }
-
             }
         });
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) { //accelerometer method to Show the yaw values
-        yawText.setTextColor(Color.rgb(148, 198, 47));
-
-        yawText.setText("Rotation: " + event.values[0]);
+    public void openActivityGallery(){ //acces the Gallery Activity
+        Intent intent = new Intent(this, ActivityGallery.class);
+        startActivity(intent);
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) { //accelerometer method to Show the yaw (Z axis) values
+
+        yawText.setTextColor(Color.rgb(148, 198, 47));
+        yawText.setText(String.format("Rotation: %.2f degrees", event.values[0])); //To show only 2 decimals after 0.
+    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
