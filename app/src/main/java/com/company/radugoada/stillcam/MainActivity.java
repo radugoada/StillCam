@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Accelerometer sensor initialize
         mySensor = SManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //Register Sensor Listener
-        SManager.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        SManager.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_UI);
         //Assign TextView to get Data from it
         yawText=(TextView)findViewById(R.id.yawText);
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         yawText.setTextColor(Color.rgb(148, 198, 47));
-        yawText.setText("Rotation: " + event.values + " degrees");
+        yawText.setText("Rotation: " + event.values[0]);
     }
 
     @Override
