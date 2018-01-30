@@ -40,8 +40,8 @@
 
     <TextView
         android:id="@+id/yawText"
-        android:layout_width="175dp"
-        android:layout_height="30dp"
+        android:layout_width="180dp"
+        android:layout_height="45dp"
         android:layout_above="@+id/button"
         android:layout_centerHorizontal="true"
         android:fontFamily="sans-serif"
